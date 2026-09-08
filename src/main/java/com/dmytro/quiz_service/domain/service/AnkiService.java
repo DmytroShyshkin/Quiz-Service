@@ -1,11 +1,12 @@
 package com.dmytro.quiz_service.domain.service;
 
-import com.dmytro.quiz_service.domain.model.AnkiCard;
-import com.dmytro.quiz_service.domain.model.CardState;
-import org.springframework.stereotype.Component;
-
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+
+import org.springframework.stereotype.Component;
+
+import com.dmytro.quiz_service.domain.model.AnkiCard;
+import com.dmytro.quiz_service.domain.model.CardState;
 
 @Component
 public class AnkiService {
@@ -35,7 +36,10 @@ public class AnkiService {
     }
 
     private double updateDifficulty(double difficulty, int rating) {
-        double newDifficulty = difficulty + 0.1 - (rating - 3) * (0.08 + (rating - 3) * 0.02);
+        double step = 0.15;
+        double delta = -(rating - 3) * step;
+
+        double newDifficulty = difficulty + delta;
         return Math.min(10.0, Math.max(1.0, newDifficulty));
     }
 
