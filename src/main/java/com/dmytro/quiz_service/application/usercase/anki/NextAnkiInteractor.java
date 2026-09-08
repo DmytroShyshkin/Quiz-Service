@@ -1,6 +1,7 @@
 package com.dmytro.quiz_service.application.usercase.anki;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -23,10 +24,12 @@ public class NextAnkiInteractor implements NextAnkiCard {
     @SuppressWarnings("null")
     @Override
     public Optional<AnkiCard> nextAnkiCard(String userEmail) {
-        List<AnkiCard> dueCards = ankiCardPort.findDueCards(userEmail, LocalDateTime.now());
+        List<AnkiCard> dueCards = new ArrayList<>(
+            ankiCardPort.findDueCards(userEmail, LocalDateTime.now())
+        );
         Collections.shuffle(dueCards);
 
         return dueCards.stream()
-                .min(Comparator.comparing(AnkiCard::getNextReviewAt));
+            .min(Comparator.comparing(AnkiCard::getNextReviewAt));
     }
 }
