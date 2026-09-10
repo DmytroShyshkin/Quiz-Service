@@ -1,15 +1,20 @@
 package com.dmytro.quiz_service.adapters.out.persistence.anki;
 
-import com.dmytro.quiz_service.domain.model.AnkiCard;
-import com.dmytro.quiz_service.domain.ports.out.AnkiCardPort;
-import com.dmytro.quiz_service.infrastructure.persistence.anki.JpaAnkiCardRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Component;
+
+import com.dmytro.quiz_service.domain.model.AnkiCard;
+import com.dmytro.quiz_service.domain.ports.out.AnkiCardPort;
+import com.dmytro.quiz_service.infrastructure.persistence.anki.AnkiCardDocument;
+import com.dmytro.quiz_service.infrastructure.persistence.anki.JpaAnkiCardRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
@@ -17,6 +22,7 @@ public class AnkiCardRepositoryAdapter implements AnkiCardPort {
 
     private final JpaAnkiCardRepository repository;
     private final AnkiCardMapper mapper;
+    private final MongoTemplate mongoTemplate;
 
     @Override
     public AnkiCard save(AnkiCard card) {
@@ -60,5 +66,10 @@ public class AnkiCardRepositoryAdapter implements AnkiCardPort {
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
+    }
+
+    @Override
+    public List<String> findDistinctUserEmails() {
+        return mongoTemplate.findDistinct(new Query(), "userEmail", AnkiCardDocument.class, String.class);
     }
 }

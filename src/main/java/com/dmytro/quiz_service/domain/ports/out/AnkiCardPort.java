@@ -1,11 +1,11 @@
 package com.dmytro.quiz_service.domain.ports.out;
 
-import com.dmytro.quiz_service.domain.model.AnkiCard;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import com.dmytro.quiz_service.domain.model.AnkiCard;
 
 public interface AnkiCardPort {
     AnkiCard save(AnkiCard card);
@@ -14,4 +14,5 @@ public interface AnkiCardPort {
     Optional<AnkiCard> deleteByWordIdAndUserEmail(UUID wordId, String userEmail);
     List<AnkiCard> deleteAllByUserEmail(String userEmail);
     List<AnkiCard> findDueCards(String userEmail, LocalDateTime before);
+    List<String> findDistinctUserEmails();
 }
